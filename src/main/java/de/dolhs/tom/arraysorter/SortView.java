@@ -52,7 +52,7 @@ public class SortView extends Application {
         borderPane.setTop(createToolbar());
         borderPane.setCenter(canvas);
         Scene scene = new Scene(borderPane);
-        scene.setOnKeyPressed(createControls());
+        scene.addEventHandler(KeyEvent.KEY_RELEASED, createControls());
         stage.setScene(scene);
         stage.show();
 
@@ -72,18 +72,20 @@ public class SortView extends Application {
         channel.allSoundOff();
 
         // Draw list.
-        Pair<LinkedList<Integer>, Integer> next = controller.next();
+        Pair<LinkedList<Integer>, LinkedList<Integer>> next = controller.next();
         LinkedList<Integer> list = next.getKey();
-        Integer current = next.getValue();
+        LinkedList<Integer> current = next.getValue();
         for (int i = 0; i < list.size(); i++) {
-            if (current != null && i == current) {
-                gc.setFill(Color.rgb(255, 51, 51));
-                int note = (int) (list.get(i) * ((double) 64 / controller.getSize()));
-                channel.noteOn(note, 50);
-            } else {
-                gc.setFill(i % 2 == 0 ? Color.rgb(118, 186, 27) : Color.rgb(164, 222, 2));
-            }
+            gc.setFill(i % 2 == 0 ? Color.rgb(118, 186, 27) : Color.rgb(164, 222, 2));
             gc.fillRect(i * (double) width / list.size(), gc.getCanvas().getHeight() - (double) list.get(i) / controller.getLogic().getMax() * gc.getCanvas().getHeight(), (double) width / list.size(), (double) list.get(i) / controller.getLogic().getMax() * (gc.getCanvas().getHeight()));
+        }
+        if (current != null) {
+            for (int i : current) {
+                gc.setFill(Color.rgb(255, 51, 51));
+                gc.fillRect(i * (double) width / list.size(), gc.getCanvas().getHeight() - (double) list.get(i) / controller.getLogic().getMax() * gc.getCanvas().getHeight(), (double) width / list.size(), (double) list.get(i) / controller.getLogic().getMax() * (gc.getCanvas().getHeight()));
+                int note = (int) (16 + list.get(i) * ((double) 64 / controller.getSize()));
+                channel.noteOn(note, 50);
+            }
         }
     }
 
@@ -182,7 +184,15 @@ public class SortView extends Application {
 
     private EventHandler<KeyEvent> createControls() {
         return keyEvent -> {
+            switch (keyEvent.getCode()) {
+                case ENTER:
+                    controller.play();
+                    break;
+                case R:
+                    controller.reset();
+                    break;
 
+            }
         };
     }
 

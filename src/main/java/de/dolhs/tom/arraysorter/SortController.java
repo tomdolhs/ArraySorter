@@ -57,13 +57,13 @@ public class SortController {
                         logic.selectionSort();
                         break;
                     case "Insertion Sort":
-//                        logic.insertionSort();
+                        logic.insertionSort();
                         break;
                     case "Merge Sort":
                         logic.mergeSort();
                         break;
                     case "Quick Sort":
-//                        logic.quickSort();
+                        logic.quickSort();
                         break;
                 }
                 setSorting(true);
@@ -74,8 +74,8 @@ public class SortController {
         }
     }
 
-    public Pair<LinkedList<Integer>, Integer> next() {
-        Pair<LinkedList<Integer>, Integer> next;
+    public Pair<LinkedList<Integer>, LinkedList<Integer>> next() {
+        Pair<LinkedList<Integer>, LinkedList<Integer>> next;
         if (!isSorting()) {
             next = new Pair<>(logic.getList(), null);
         } else {
@@ -148,7 +148,7 @@ public class SortController {
     }
 
     public void decreaseSize() {
-        setSize(Math.max(2, getSize() / 2));
+        setSize(Math.max(8, getSize() / 2));
         logic.setMax(getSize());
         reset();
     }
